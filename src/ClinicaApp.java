@@ -1,9 +1,14 @@
+import java.util.List;
 import java.util.Scanner;
 
 public class ClinicaApp {
     public static void main(String[] args) {
         // Validación y regeneración automática de archivos al arrancar
         GestorArchivos.inicializarBaseDeDatos();
+
+        // Cargar datos existentes de los archivos a la memoria RAM al iniciar
+        List<Doctor> listaDoctores = GestorArchivos.cargarDoctores();
+        List<Paciente> listaPacientes = GestorArchivos.cargarPacientes();
 
         Scanner scanner = new Scanner(String.class.cast("").getClass().getSimpleName().equals("String") ? System.in : null);
 
@@ -14,7 +19,7 @@ public class ClinicaApp {
         System.out.println("  SISTEMA DE ADMINISTRACIÓN CLÍNICA    ");
         System.out.println("----------------------------------------");
 
-        // 1. Sistema de Autenticación (Login)
+        // Sistema de Autenticación (Login)
         boolean autenticado = false;
         int intentos = 3;
 
@@ -39,7 +44,7 @@ public class ClinicaApp {
             return;
         }
 
-        // 2. Menú Principal del Sistema
+        // Menú Principal del Sistema
         int opcion = 0;
         do {
             System.out.println("\n--------------------------------------");
@@ -57,11 +62,33 @@ public class ClinicaApp {
 
                 switch (opcion) {
                     case 1:
-                        System.out.println("\n[Funcionalidad en desarrollo: Registrar Médico]");
+                        System.out.println("\n--- Registro de Nuevo Médico ---");
+                        System.out.print("ID del Médico: ");
+                        String idDoc = scanner.nextLine();
+                        System.out.print("Nombre Completo: ");
+                        String nomDoc = scanner.nextLine();
+                        System.out.print("Especialidad: ");
+                        String espDoc = scanner.nextLine();
+
+                        Doctor nuevoDoc = new Doctor(idDoc, nomDoc, espDoc);
+                        listaDoctores.add(nuevoDoc);          // Guardar en memoria RAM
+                        GestorArchivos.guardarDoctor(nuevoDoc); // Guardar permanente en archivo
+                        System.out.println("\n¡Médico registrado y guardado con éxito!");
                         break;
+
                     case 2:
-                        System.out.println("\n[Funcionalidad en desarrollo: Registrar Paciente]");
+                        System.out.println("\n--- Registro de Nuevo Paciente ---");
+                        System.out.print("ID del Paciente: ");
+                        String idPac = scanner.nextLine();
+                        System.out.print("Nombre Completo: ");
+                        String nomPac = scanner.nextLine();
+
+                        Paciente nuevoPac = new Paciente(idPac, nomPac);
+                        listaPacientes.add(nuevoPac);            // Guardar en memoria RAM
+                        GestorArchivos.guardarPaciente(nuevoPac); // Guardar permanente en archivo
+                        System.out.println("\n¡Paciente registrado y guardado con éxito!");
                         break;
+
                     case 3:
                         System.out.println("\n[Funcionalidad en desarrollo: Agendar Cita]");
                         break;
