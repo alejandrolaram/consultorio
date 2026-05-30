@@ -9,6 +9,7 @@ public class ClinicaApp {
         // Cargar datos existentes de los archivos a la memoria RAM al iniciar
         List<Doctor> listaDoctores = GestorArchivos.cargarDoctores();
         List<Paciente> listaPacientes = GestorArchivos.cargarPacientes();
+        List<Cita> listaCitas = GestorArchivos.cargarCitas(listaDoctores, listaPacientes);
 
         Scanner scanner = new Scanner(String.class.cast("").getClass().getSimpleName().equals("String") ? System.in : null);
 
@@ -90,11 +91,48 @@ public class ClinicaApp {
                         break;
 
                     case 3:
-                        System.out.println("\n[Funcionalidad en desarrollo: Agendar Cita]");
+                        System.out.println("\n--- Agendar Cita Médica ---");
+                        System.out.print("ID de la Cita: ");
+                        String idCita = scanner.nextLine();
+                        System.out.print("Fecha y Hora (Ej. 15/Octu/2026 10:00): ");
+                        String fechaHora = scanner.nextLine();
+                        System.out.print("Motivo de la consulta: ");
+                        String motivo = scanner.nextLine();
+
+                        System.out.print("ID del Médico asignado: ");
+                        String buscarIdDoc = scanner.nextLine();
+                        System.out.print("ID del Paciente: ");
+                        String buscarIdPac = scanner.nextLine();
+
+                        // Validación de existencia cruzando las listas
+                        Doctor docCita = listaDoctores.stream().filter(d -> d.getId().equals(buscarIdDoc)).findFirst().orElse(null);
+                        Paciente pacCita = listaPacientes.stream().filter(p -> p.getId().equals(buscarIdPac)).findFirst().orElse(null);
+
+                        if (docCita == null) {
+                            System.out.println("\nError: El ID del médico no existe en el sistema. Registre al médico primero.");
+                        } else if (pacCita == null) {
+                            System.out.println("\nError: El ID del paciente no existe en el sistema. Registre al paciente primero.");
+                        } else {
+                            Cita nuevaCita = new Cita(idCita, fechaHora, motivo, docCita, pacCita);
+                            listaCitas.add(nuevaCita);            // Guardar en memoria RAM
+                            GestorArchivos.guardarCita(nuevaCita); // Guardar permanente en archivo
+                            System.out.println("\n¡Cita agendada y guardada con éxito!");
+                        }
                         break;
+
                     case 4:
-                        System.out.println("\n[Funcionalidad en desarrollo: Mostrar Citas]");
+                        System.out.println("\n--------------------------------------");
+                        System.out.println("        LISTA DE CITAS AGENDADAS        ");
+                        System.out.println("----------------------------------------");
+                        if (listaCitas.isEmpty()) {
+                            System.out.println("No hay citas médicas registradas en el sistema.");
+                        } else {
+                            for (Cita cita : listaCitas) {
+                                System.out.println(cita.getDetails());
+                            }
+                        }
                         break;
+
                     case 5:
                         System.out.println("\nCerrando sesión. ¡Hasta pronto!");
                         break;
