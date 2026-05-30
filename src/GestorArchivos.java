@@ -6,6 +6,7 @@ public class GestorArchivos {
     private static final String CARPETA_DB = "db/";
     private static final String ARCHIVO_DOCTORES = CARPETA_DB + "doctores.txt";
     private static final String ARCHIVO_PACIENTES = CARPETA_DB + "pacientes.txt";
+    private static final String ARCHIVO_CITAS = CARPETA_DB + "citas.txt";
 
     // Método para validar que la carpeta y los archivos existan al iniciar el programa
     public static void inicializarBaseDeDatos() {
@@ -86,6 +87,52 @@ public class GestorArchivos {
             }
         } catch (IOException e) {
             System.out.println("Error al cargar los registros de los pacientes.");
+        }
+        return lista;
+    }
+
+    // Guarda una cita en el archivo usando los IDs de doctor y paciente
+    public static void guardarCita(Cita cita) {
+        try (FileWriter fw = new FileWriter(ARCHIVO_CITAS, true);
+             BufferedWriter bw = new BufferedWriter(fw);
+             PrintWriter out = new PrintWriter(bw)) {
+            // Estructura: idCita,fechaHora,motivo,idDoctor,idPaciente
+            out.println(cita.getIdCita() + "," + cita.getFechaHora() + "," +
+                    cita.getMotivo() + "," + cita.getDoctor().getId() + "," +
+                    cita.getPaciente().getId());
+        } catch (IOException e) {
+            System.out.println("Error al guardar la cita en el archivo.");
+        }
+    }
+
+    // Carga las citas y las vincula con los objetos Doctor y Paciente reales
+    public static List<Cita> cargarCitas(List<Doctor> doctores, List<Paciente> pacientes) {
+        List<Cita> lista = new ArrayList<>();
+        File archivo = new File(ARCHIVO_CITAS);
+        if (!archivo.exists()) return lista;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ARCHIVO_CITAS))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] datos = linea.split(",");
+                if (datos.length == 5) {
+                    String idCita = datos[0];
+                    String fechaHora = datos[1];
+                    String motivo = datos[2];
+                    String idDoc = datos[3];
+                    String idPac = datos[4];
+
+                    // Busca los objetos en las listas que ya están cargadas
+                    Doctor dFound = doctores.stream().filter(d -> d.getId().equals(idDoc)).findFirst().orElse(null);
+                    Paciente pFound = pacientes.stream().filter(p -> p.getId().equals(idPac)).findFirst().orElse(null);
+
+                    if (dFound != null && pFound != null) {
+                        lista.add(new Cita(idCita, fechaHora, motivo, dFound, pFound));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error al cargar las citas del archivo.");
         }
         return lista;
     }
