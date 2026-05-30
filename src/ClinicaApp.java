@@ -2,6 +2,9 @@ import java.util.Scanner;
 
 public class ClinicaApp {
     public static void main(String[] args) {
+        // Validación y regeneración automática de archivos al arrancar
+        GestorArchivos.inicializarBaseDeDatos();
+
         Scanner scanner = new Scanner(String.class.cast("").getClass().getSimpleName().equals("String") ? System.in : null);
 
         // Objeto Administrador de prueba para el login
