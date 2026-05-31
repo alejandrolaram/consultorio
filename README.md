@@ -12,17 +12,17 @@ Este programa simula un sistema de gestión para un consultorio clínico, permit
 Para ejecutar la aplicación portable, corre el siguiente comando en su terminal:
 
 ```bash
-java -jar ConsultorioClinico.jar
+java -jar consultorio.jar
 ```
 
-Credenciales de acceso por defecto:
+## Credenciales de acceso por defecto:
 
-Usuario: admin
-Contraseña: password123
+* Usuario: admin
+* Contraseña: 1234
 
 
-Licencia
+## Licencia
 Este proyecto está bajo la Licencia MIT.
 
-Créditos
+## Créditos
 Desarrollado por Alejandro, estudiante de Ingeniería en Computación Administrativa.
